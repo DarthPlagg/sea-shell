@@ -31,24 +31,22 @@ You need a C compiler (like `gcc`) and `make` installed on your system.
 
 ### Installation & Compilation
 
-1. Clone the repository:
-   ```bash
+1. **Clone the repository:** 
+   ```Bash
    git clone [https://github.com/DarthPlagg/sea-shell.git](https://github.com/DarthPlagg/sea-shell.git)
-
-    Navigate to the directory:
-    Bash
-
+   ```
+2.**Navigate to the directory:**
+```Bash
     cd sea-shell
-
-    Compile the project using Make:
-    Bash
-
+```
+3.**Compile the project using Make:**
+    ```Bash
     make
-
-    Run Sea Shell:
-    Bash
-
+    ```
+4.**Run Sea Shell:**
+    Bash```
     ./seashell
+    ```
 
 ## 🧹 Cleaning Up
 
