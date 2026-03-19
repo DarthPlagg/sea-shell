@@ -1,2 +1,6 @@
-seash
+# Ignoruj pliki wykonywalne
+seashell
+a.out
+
+# Ignoruj skompilowane pliki obiektowe
 *.o
