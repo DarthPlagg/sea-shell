@@ -33,19 +33,19 @@ You need a C compiler (like `gcc`) and `make` installed on your system.
 
 1. **Clone the repository:** 
 ```Bash
-   git clone [https://github.com/DarthPlagg/sea-shell.git](https://github.com/DarthPlagg/sea-shell.git)
+git clone [https://github.com/DarthPlagg/sea-shell.git](https://github.com/DarthPlagg/sea-shell.git)
 ```
 2.**Navigate to the directory:**
 ```Bash
-    cd sea-shell
+cd sea-shell
 ```
 3.**Compile the project using Make:**
 ```Bash
-    make
+make
 ```
 4.**Run Sea Shell:**
 ```Bash
-    ./seashell
+./seashell
 ```
 
 ## 🧹 Cleaning Up
