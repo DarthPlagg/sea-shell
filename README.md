@@ -40,13 +40,13 @@ You need a C compiler (like `gcc`) and `make` installed on your system.
     cd sea-shell
 ```
 3.**Compile the project using Make:**
-    ```Bash
+```Bash
     make
-    ```
+```
 4.**Run Sea Shell:**
-    Bash```
+```Bash
     ./seashell
-    ```
+```
 
 ## 🧹 Cleaning Up
 
