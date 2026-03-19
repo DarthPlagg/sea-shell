@@ -1,6 +1,9 @@
 CC = gcc
 CFLAGS = -Wall -Wextra
-OBJS = main.o input.o parser.o executor.o
+
+SRC_DIR = src
+SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/input.c $(SRC_DIR)/parser.c $(SRC_DIR)/executor.c
+OBJS = $(SRCS:.c=.o)
 EXEC = seashell
 
 all: $(EXEC)
