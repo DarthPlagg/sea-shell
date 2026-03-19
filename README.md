@@ -50,10 +50,12 @@ You need a C compiler (like `gcc`) and `make` installed on your system.
 
     ./seashell
 
-🧹 Cleaning Up
+## 🧹 Cleaning Up
 
-To remove the compiled object files and the executable, run:
-Bash
+To remove the compiled object files and the executable (to keep your workspace clean), run:
 
+```bash
 make clean
+```
+
 
