@@ -33,7 +33,7 @@ You need a C compiler (like `gcc`) and `make` installed on your system.
 
 1. **Clone the repository:** 
 ```Bash
-git clone [https://github.com/DarthPlagg/sea-shell.git](https://github.com/DarthPlagg/sea-shell.git)
+git clone https://github.com/DarthPlagg/sea-shell.git
 ```
 2.**Navigate to the directory:**
 ```Bash
