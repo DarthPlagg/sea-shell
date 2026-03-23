@@ -7,6 +7,7 @@ This project was built to deeply understand operating system concepts such as pr
 
 * **Custom Prompt:** Features a dynamic, colored command-line prompt displaying the current working directory.
 * **Process Execution:** Can execute standard Unix system commands (e.g., `ls`, `pwd`, `cat`).
+* **Pipeline Execution:** Supports chaining commands together using the `|` operator (e.g., `ls -a | grep .c`), seamlessly redirecting the output of one process into the input of the next.
 * **Built-in Commands:**
   * `cd <directory>` - Change the current working directory.
   * `clear` - Clears the terminal screen using ANSI escape codes.
