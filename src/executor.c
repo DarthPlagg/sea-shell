@@ -6,7 +6,65 @@
 #include "executor.h"
 #include "colors.h"
 
-int execute_command(char** args){
+int execute_piped(char ***args){
+    // TEMPORARY FOR ONLY ONE PIPE
+    char **args1 = args[0];
+    char **args2 = args[1];
+
+	int pipefd[2];
+	pid_t p1, p2;
+
+	if(pipe(pipefd) < 0){
+		perror("seashell: pipe error");
+		return -1;
+	}	
+
+	p1 = fork();
+	if(p1 < 0){
+		perror("seashell: fork error");
+		return -1;
+	}
+
+	if(p1 == 0){
+		dup2(pipefd[1], STDOUT_FILENO);
+
+		close(pipefd[0]);
+		close(pipefd[1]);
+
+		if(execvp(args1[0], args1) < 0){
+			perror("seashell: command 1 execution failed");
+			exit(EXIT_FAILURE);
+		}
+	}
+	
+	p2 = fork();
+	if(p2 < 0){
+		perror("seashell: fork error");
+		return -1;
+	}
+
+	if(p2 == 0){
+		dup2(pipefd[0], STDIN_FILENO);
+		
+		close(pipefd[0]);
+		close(pipefd[1]);
+
+        if(execvp(args2[0], args2) < 0){
+            perror("seashell: command 2 execution failed");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    close(pipefd[0]);
+    close(pipefd[1]);
+
+    waitpid(p1, NULL, 0);
+    waitpid(p2, NULL, 0);
+
+    return 1;
+}
+
+int execute_command(char **args){
     // Protection against empty input
     if(args[0] == NULL){
         return 1;
@@ -28,7 +86,7 @@ int execute_command(char** args){
         }
         return 1; 
     }
-
+    
     // Built-in command: clear
     if(strcmp(args[0], "clear") == 0){
         printf("\x1b[2J\x1b[H");
@@ -45,12 +103,12 @@ int execute_command(char** args){
             perror(COLOR_RED "seashell" COLOR_RESET);
         }
         exit(EXIT_FAILURE);
-    } else if(pid < 0){
+    }else if(pid < 0){
         perror(COLOR_RED "seashell" COLOR_RESET);
-    } else {
-        do {
+    }else{
+        do{
             waitpid(pid, &exit_status, WUNTRACED);
-        } while(!WIFEXITED(exit_status) && !WIFSIGNALED(exit_status));
+        }while(!WIFEXITED(exit_status) && !WIFSIGNALED(exit_status));
     }
     return 1;
 }

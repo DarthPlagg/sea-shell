@@ -21,7 +21,7 @@ char* get_user_input(){
             if(pos_buff == 0){
                 printf("\n"); 
                 exit(EXIT_SUCCESS); 
-            } else {
+            }else{
                 input_line[pos_buff] = '\0';
                 return input_line;
             }
@@ -38,7 +38,7 @@ char* get_user_input(){
         // If we exceed the buffer, reallocate more memory
         if(pos_buff >= cap_buff-1){
             cap_buff += 1024;
-            char* new_p = realloc(input_line, cap_buff * sizeof(char));
+            char *new_p = realloc(input_line, cap_buff*sizeof(char));
 
             if(new_p == NULL){
                  fprintf(stderr, COLOR_RED "seashell: allocation error\n" COLOR_RESET);

@@ -4,11 +4,45 @@
 #include "parser.h"
 #include "colors.h"
 
-char** parse_command(char* raw_input){
+int count_pipe(char **input){
+    int i = 0, res = 0;
+    while(input[i] != NULL){
+        if(strcmp(input[i], "|") == 0)
+            res++;
+        i++;
+    }
+    return res;
+}
+
+/*
+ * Splits a single array of tokens into multiple NULL-terminated command arrays in-place.
+ * It replaces the "|" token with NULL to terminate the argument list for execvp(),
+ * and stores the starting address of each subsequent command in the 'res' array.
+ */
+char ***parse_pipe(char **input, int pipes){
+    pipes++;
+    char ***res = malloc(pipes*sizeof(char**));
+
+    int cmd_idx = 0;
+    res[0] = &input[0];
+    cmd_idx++;
+    
+    for(int i = 0; input[i] != NULL; i++){
+        if(strcmp(input[i], "|") == 0){
+            input[i] = NULL; 
+            res[cmd_idx] = &input[i + 1];
+            cmd_idx++;
+        }
+    }
+    
+    return res;
+}
+
+char **parse_command(char *raw_input){
     int cap_words = 64;
     int pos_words = 0;
-    char** tokens = malloc(cap_words * sizeof(char*));
-    char* token = strtok(raw_input, " \t\r\n\a");
+    char **tokens = malloc(cap_words*sizeof(char*));
+    char *token = strtok(raw_input, " \t\r\n\a");
 
     while(token != NULL){
         tokens[pos_words] = token;
