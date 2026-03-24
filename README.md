@@ -37,15 +37,8 @@ make
 ```bash
 ./seashell
 ```
-# Example
-```bash
-ls -l | grep ".c" | wc -l
-cat file.txt > out.txt
-sleep 10 &
-```
 ## Future Work
-Signal handling (SIGINT)
-Job control
-Command history
-
+- Signal handling (SIGINT)
+- Job control
+- Command history
 ---
