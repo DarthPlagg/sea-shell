@@ -1,7 +1,8 @@
 #ifndef EXECUTOR_H
 #define EXECUTOR_H
 
-int execute_piped(char ***args, int pipes);
-int execute_command(char **args);
+#include "command.h"
+
+int execute_all(Command *commands, int num_commands, int background);
 
 #endif
