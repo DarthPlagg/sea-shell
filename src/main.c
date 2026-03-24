@@ -26,7 +26,7 @@ void run_shell(){
         // There are pipes
         if(cnt > 0){
             char ***pipe_commands = parse_pipe(commands, cnt);
-            status = execute_piped(pipe_commands);
+            status = execute_piped(pipe_commands, cnt);
             free(pipe_commands);
         }else{
             // There are none

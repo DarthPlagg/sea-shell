@@ -6,61 +6,56 @@
 #include "executor.h"
 #include "colors.h"
 
-int execute_piped(char ***args){
-    // TEMPORARY FOR ONLY ONE PIPE
-    char **args1 = args[0];
-    char **args2 = args[1];
+int execute_piped(char ***args, int pipes){
+    
+    int pipefd[2], prev_pipe = -1;
+    int n = pipes+1; // Number of commands 
+    pid_t pid;
 
-	int pipefd[2];
-	pid_t p1, p2;
+    for(int i = 0; i < n; i++){
 
-	if(pipe(pipefd) < 0){
-		perror("seashell: pipe error");
-		return -1;
-	}	
-
-	p1 = fork();
-	if(p1 < 0){
-		perror("seashell: fork error");
-		return -1;
-	}
-
-	if(p1 == 0){
-		dup2(pipefd[1], STDOUT_FILENO);
-
-		close(pipefd[0]);
-		close(pipefd[1]);
-
-		if(execvp(args1[0], args1) < 0){
-			perror("seashell: command 1 execution failed");
-			exit(EXIT_FAILURE);
-		}
-	}
-	
-	p2 = fork();
-	if(p2 < 0){
-		perror("seashell: fork error");
-		return -1;
-	}
-
-	if(p2 == 0){
-		dup2(pipefd[0], STDIN_FILENO);
-		
-		close(pipefd[0]);
-		close(pipefd[1]);
-
-        if(execvp(args2[0], args2) < 0){
-            perror("seashell: command 2 execution failed");
-            exit(EXIT_FAILURE);
+        if(i < pipes && pipe(pipefd) < 0){
+            perror("seashell: pipe error");
+		    return -1;
         }
-    }
 
-    close(pipefd[0]);
-    close(pipefd[1]);
+        pid = fork();
+        if(pid < 0){
+		    perror("seashell: fork error");
+		    return -1;
+        }
 
-    waitpid(p1, NULL, 0);
-    waitpid(p2, NULL, 0);
+        if(pid == 0){
+            if(prev_pipe != -1){
+                dup2(prev_pipe, STDIN_FILENO);
+                close(prev_pipe);
+            }
 
+            if(i < pipes){
+                dup2(pipefd[1], STDOUT_FILENO);
+                close(pipefd[0]);
+                close(pipefd[1]);
+            }
+
+            if(execvp(args[i][0], args[i]) < 0){
+                perror("seashell: execution error");
+                exit(EXIT_FAILURE);
+            }
+        }else{
+            if(prev_pipe != -1){
+                close(prev_pipe);
+            }
+
+            if(i < pipes){
+                prev_pipe = pipefd[0];
+                close(pipefd[1]);
+            }
+        }
+	}
+
+    for(int i = 0; i < n; i++){
+        wait(NULL);
+    }   
     return 1;
 }
 
