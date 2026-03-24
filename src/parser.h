@@ -3,8 +3,10 @@
 
 #include "command.h"
 
-// Public API for the parser module
+// Main parsing API: converts raw string to a pipeline of commands
 Command *parse_input(char *raw_input, int *num_commands, int *background);
+
+// Free dynamically allocated memory for the pipeline
 void free_pipeline(Command *commands, int num_commands);
 
 #endif
