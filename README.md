@@ -1,4 +1,4 @@
-# 🐚 Sea Shell (seash) 🌊
+# 🐚 Sea Shell 🌊
 
 A lightweight, custom Unix shell written from scratch in C. 
 This project was built to deeply understand operating system concepts such as process creation (`fork`, `execvp`), inter-process communication (`pipe`), file descriptors, and dynamic memory management.
