@@ -17,6 +17,15 @@ This project was built to deeply understand operating system concepts such as pr
 * **Robust Memory Management:** Dynamic allocation for user input and command structures with zero hardcoded limits on line length or argument count.
 * **Clean Architecture:** Modular codebase with clear separation between parsing and execution logic.
 
+## 🧠 Technical Challenges & Learning Outcomes
+
+Building a shell from scratch is a dive into the deep end of systems programming. Here are some of the key technical hurdles I overcame:
+
+* **Process Orchestration & Synchronization:** Implementing pipes (`|`) required a deep understanding of `fork()` and `pipe()`. The challenge was ensuring that each process in the pipeline correctly inherits file descriptors and that the parent process waits only for the foreground tasks, preventing "zombie" processes.
+* **File Descriptor Management:** Managing redirections (`<`, `>`) involved swapping standard streams using `dup2()`. Ensuring that pipes and files are closed in the correct order was crucial to prevent resource leaks and hanging processes.
+* **Dynamic Memory Safety:** Since user input can be of any length, I implemented a dynamic buffer with `realloc()`. The challenge was ensuring that all memory—from the raw input string to the complex `Command` structures—is properly freed, even when a command fails or the user exits.
+* **Recursive Signal Handling (Mental Model):** While not fully exposed in the current version, designing the architecture to eventually handle `SIGINT` (Ctrl+C) without killing the shell itself required careful planning of how processes are grouped.
+
 ## 🛠️ Project Structure
 
 * `src/main.c` - Orchestrates the main shell loop and handles the high-level lifecycle.
