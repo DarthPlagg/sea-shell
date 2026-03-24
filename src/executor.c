@@ -64,15 +64,15 @@ static void setup_redirections(Command *cmd) {
 }
 
 // Helper: Handle waiting for child processes
-static void wait_for_children(int num_commands, int background) {
+static void wait_for_children(pid_t last_pid, int num_commands, int background) {
     if (background == 0) {
-        // Foreground process - wait for all children in the pipeline
-        for (int i = 0; i < num_commands; i++) {
-            wait(NULL);
-        }   
+        // Czekaj konkretnie na ostatni element rurociągu
+        waitpid(last_pid, NULL, 0);
+        
+        // Opcjonalnie: wyczyść resztę, żeby nie było zombie
+        while (wait(NULL) > 0); 
     } else {
-        // Background process - don't block the shell
-        printf(COLOR_GREEN "[Background process started]\n" COLOR_RESET);
+        printf(COLOR_GREEN "[Background process started with PID %d]\n" COLOR_RESET, last_pid);
     }
 }
 
@@ -91,7 +91,7 @@ int execute_all(Command *commands, int num_commands, int background) {
     }
 
     int pipefd[2], prev_pipe = -1;
-    pid_t pid;
+    pid_t pid, last_pid;
 
     // Iterate through all commands in the pipeline
     for (int i = 0; i < num_commands; i++) {
@@ -131,6 +131,8 @@ int execute_all(Command *commands, int num_commands, int background) {
             }
         } else {
             // Parent process: clean up old pipe file descriptors
+            if (i == num_commands - 1) last_pid = pid;
+             
             if (prev_pipe != -1) close(prev_pipe);
             if (i < num_commands - 1) {
                 prev_pipe = pipefd[0];
@@ -140,7 +142,7 @@ int execute_all(Command *commands, int num_commands, int background) {
     }
 
     // 4. Wait for execution to finish or run in background
-    wait_for_children(num_commands, background);
+    wait_for_children(last_pid, num_commands, background);
     
     return 1;
 }
