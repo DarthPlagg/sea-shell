@@ -8,7 +8,6 @@
 #include "colors.h"
 #include "command.h"
 
-// Helper: Execute built-in commands (cd, clear, exit)
 static int execute_builtin(Command *cmd) {
     char **args = cmd->args;
     
@@ -32,7 +31,6 @@ static int execute_builtin(Command *cmd) {
     return 2;
 }
 
-// Helper: Setup file redirections (< and >)
 static void setup_redirections(Command *cmd) {
     if (cmd->input_file != NULL) {
         int fd_in = open(cmd->input_file, O_RDONLY);
@@ -55,22 +53,19 @@ static void setup_redirections(Command *cmd) {
     }
 }
 
-// Helper: Handle waiting for child processes (Foreground/Background)
 static void wait_for_children(pid_t last_pid, int num_commands, int background) {
     if (background == 0) {
-        // Wait specifically for the last process in the pipeline to finish
+
         if (last_pid > 0) {
             waitpid(last_pid, NULL, 0);
         }
         
-        // Clean up any remaining children to prevent zombies
         while (wait(NULL) > 0); 
     } else {
         printf(COLOR_GREEN "[Background process started with PID %d]\n" COLOR_RESET, last_pid);
     }
 }
 
-// Main execution engine
 int execute_all(Command *commands, int num_commands, int background) {
     
     if (commands == NULL || num_commands == 0 || commands[0].args == NULL || commands[0].args[0] == NULL) {
@@ -100,7 +95,6 @@ int execute_all(Command *commands, int num_commands, int background) {
         }
         
         if (pid == 0) {
-            // Child process setup
             if (prev_pipe != -1) {
                 dup2(prev_pipe, STDIN_FILENO);
                 close(prev_pipe);
@@ -118,7 +112,6 @@ int execute_all(Command *commands, int num_commands, int background) {
                 exit(EXIT_FAILURE);
             }
         } else {
-            // Parent process: save the last PID to wait for it later
             if (i == num_commands - 1) {
                 last_pid = pid;
             }
@@ -131,7 +124,6 @@ int execute_all(Command *commands, int num_commands, int background) {
         }
     }
 
-    // Wait for foreground or acknowledge background execution
     wait_for_children(last_pid, num_commands, background);
     
     return 1;
